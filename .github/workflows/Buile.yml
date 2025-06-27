@@ -1,0 +1,39 @@
+name: Build Akile Monitor
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        goos: [linux, windows]
+        goarch: [amd64]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22'
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          mkdir -p build
+          go build -o build/ak_monitor-${{ matrix.goos }}-${{ matrix.goarch }}
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: ak_monitor-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: build/ak_monitor-*
+          
