@@ -144,7 +144,7 @@ func main() {
 				json.Unmarshal(data, &mm)
 				for _, v := range mm {
 					// 30秒内离线
-					if v.TimeStamp < time.Now().Unix()-60 {
+					if v.TimeStamp < time.Now().Unix()-2700 {
 						if !offline[v.Host.Name] {
 							offline[v.Host.Name] = true
 							msg := fmt.Sprintf("❌ %s 离线了", v.Host.Name)
